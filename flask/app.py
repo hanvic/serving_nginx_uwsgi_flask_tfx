@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request, make_response
+from PIL import Image
+import base64
 from werkzeug.utils import secure_filename
 # import config
 # import demo
@@ -16,12 +18,19 @@ app = Flask(__name__)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    f = request.files['file']
-    in_memory_file = io.BytesIO()
-    f.save(in_memory_file)
-    data = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
+    # f = request.files['file']
+    # in_memory_file = io.BytesIO()
+    # f.save(in_memory_file)
+    # data = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
     color_image_flag = 1
-    img = cv2.imdecode(data, color_image_flag)
+    a=request
+    data=request.form['data']
+    imgdata = base64.b64decode(str(data))
+    image = Image.open(io.BytesIO(imgdata))
+    img = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
+    # data = np.fromstring(data, dtype=np.uint8)
+    # img = cv2.imdecode(data, color_image_flag)
+    cv2.imwrite('/home/serving/alpha/data/test_saved.png',img)
     img = cv2.resize(img, (512,512))
     tmp_images = []
     tmp_images.append(img)
@@ -58,4 +67,4 @@ def index():
     return 'Hello World!'
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=7014)
