@@ -116,12 +116,12 @@ def single_image_visual_result(image, prediction,target_features, threshold=0.5,
             NofPixels = masks_color.shape[0]*masks_color.shape[1]
             NofValidPixels = NofValidPixels
             print("ratio valid pixels : ", NofValidPixels/NofPixels)
-            # if NofValidPixels/NofPixels<0.9:
-            #     if NofValidPixels/NofPixels>0.01:
-            #         result_image += masks_color
-            #         disease_name=no2name_dict[str(c_i-1)]
-            #         result_dict[disease_name]=1
-            #         result_prob_dict[disease_name]=maxRatio
+            if NofValidPixels/NofPixels<0.9:
+                if NofValidPixels/NofPixels>0.01:
+                    result_image += masks_color
+                    disease_name=no2name_dict[str(c_i-1)]
+                    result_dict[disease_name]=1
+                    result_prob_dict[disease_name]=maxRatio
             # else:
             #     result_image += np.zeros_like(masks_color)
             # show_image = np.floor((1-alpha)*image) + np.floor((alpha*2/3)*masks_color) + np.floor((alpha/3)*lables_color)
