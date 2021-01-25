@@ -116,26 +116,26 @@ def single_image_visual_result(image, prediction,target_features, threshold=0.5,
             NofPixels = masks_color.shape[0]*masks_color.shape[1]
             NofValidPixels = NofValidPixels
             print("ratio valid pixels : ", NofValidPixels/NofPixels)
-            if NofValidPixels/NofPixels<0.9:
-                if NofValidPixels/NofPixels>0.01:
-                    result_image += masks_color
-                    disease_name=no2name_dict[str(c_i-1)]
-                    result_dict[disease_name]=1
-                    result_prob_dict[disease_name]=maxRatio
+            # if NofValidPixels/NofPixels<0.9:
+            #     if NofValidPixels/NofPixels>0.01:
+            #         result_image += masks_color
+            #         disease_name=no2name_dict[str(c_i-1)]
+            #         result_dict[disease_name]=1
+            #         result_prob_dict[disease_name]=maxRatio
             # else:
             #     result_image += np.zeros_like(masks_color)
             # show_image = np.floor((1-alpha)*image) + np.floor((alpha*2/3)*masks_color) + np.floor((alpha/3)*lables_color)
             # show_image = (1-alpha)*image + alpha*lables_color
-            result_image = (1-alpha)*image + alpha*result_image
-            show_image = np.floor(show_image).astype(np.uint8)
-            show_image[:,:512,:] = image
-            show_image[:,512:,:] = masks_color
+            # result_image = (1-alpha)*image + alpha*result_image
+            # show_image = np.floor(show_image).astype(np.uint8)
+            # show_image[:,:512,:] = image
+            # show_image[:,512:,:] = masks_color
             # print("no", no, np.max(masks_color), len(np.where(masks_color > 0)[0]))
             # show_image = Image.fromarray(np.uint8(show_image))
-            show_image = show_image.astype(np.uint8)
-            base_save_folder = '/home/projects/src/refineData/outputs/snapshot/'
-            if not os.path.isdir(base_save_folder):
-                os.makedirs(base_save_folder)
+            # show_image = show_image.astype(np.uint8)
+            # base_save_folder = '/home/projects/src/refineData/outputs/snapshot/'
+            # if not os.path.isdir(base_save_folder):
+            #     os.makedirs(base_save_folder)
             # cv2.imwrite(base_save_folder+'/one_shot_no_{}.png'.format(k),show_image)
     # cv2.imwrite(base_save_folder+'/result_no.png'.format(k),result_image)
             # cv2.imwrite(base_save_folder+'/original_no_{}_{}.png'.format(no,k),image)

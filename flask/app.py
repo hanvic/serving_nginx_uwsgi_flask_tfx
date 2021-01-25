@@ -71,7 +71,7 @@ def predict():
     # img = cv2.cvtColor(np.array(image), cv2.COLOR_BGR2RGB)
     # data = np.fromstring(data, dtype=np.uint8)
     # img = cv2.imdecode(data, color_image_flag)
-    cv2.imwrite('/home/serving/alpha/data/test_saved3.png',img)
+    # cv2.imwrite('/home/serving/alpha/data/test_saved3.png',img)
 
 
     threshold = 0.2
