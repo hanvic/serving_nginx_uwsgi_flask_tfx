@@ -3,7 +3,7 @@ import io
 import base64
 
 
-with open("/home/serving/alpha/data/_2737476_orig[1].jpg", "rb") as fh:
+with open("/home/serving/alpha/data/AlphadoPhoto_2020-10-15 13_33_51_931.JPG", "rb") as fh:
     buf = io.BytesIO(fh.read())
 
 

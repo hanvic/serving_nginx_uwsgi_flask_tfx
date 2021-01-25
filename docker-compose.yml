@@ -1,26 +1,26 @@
-version: "3.7"
+version: "3.3"
 
 services:
-#    tfserving:
-#        image: tensorflow/serving:2.3.0-gpu
-#        container_name: tfs
-#        volumes:
-#            - /home/serving/:/models/
-#            - type: bind
-#              source: /home/serving/eye
-#              target: /models/eye
-#        ports:
-#            - "8501:8501"
-#        environment:
-#            - NVIDIA_VISIBLE_DEVICES=0
-#            - MODEL_NAME=eye
-#        command:
-#            - '--model_config_file_poll_wait_seconds=60'
-#            - '--model_config_file=/models/models.config'
-#            - '--per_process_gpu_memory_fraction=0.15'
-#            - '--allow_growth=True'
-#        expose:
-#            - 8501
+    tfserving:
+        image: tensorflow/serving:2.3.0-gpu
+        container_name: tfs
+        volumes:
+            - /home/serving/:/models/
+            - type: bind
+              source: /home/serving/eye
+              target: /models/eye
+        ports:
+            - "8501:8501"
+        environment:
+            - NVIDIA_VISIBLE_DEVICES=0
+            - MODEL_NAME=eye
+        command:
+            - '--model_config_file_poll_wait_seconds=60'
+            - '--model_config_file=/models/models.config'
+            - '--per_process_gpu_memory_fraction=0.15'
+            - '--allow_growth=True'
+        expose:
+            - 8501
 #        networks:
 #            - backend
 #    flask-api-mysql:
@@ -33,43 +33,43 @@ services:
 #        environment:
 #            - MYSQL_ROOT_PASSWORD=toor
 #            - MYSQL_DATABASE=flask-api-db
-    flask:
-        image: flask:serving
-        build: ./flask
-        container_name: flask
-        restart: always
-        ports:
-            - "5000:5000"
-#        command:
-#            - /flask-api/wait-for-it.sh flask-api-mysql:3306 -- gunicorn -b 0.0.0.0:5000 -k gevent src.runner:app
-
-        environment:
-            - APP_NAME=FlaskTest
-#            - FLASK_API_SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:toor@flask-api-mysql/flask-api-db
-#        depends_on:
-#            - flask-api-mysql
-#        volumes:
-#            - /docker/flask/config.prod.yaml:/www/src/config.yaml
-#            - /docker/flask/xkm/clientCOnfig_for_prod.ini:/root/xecure/xkm/conf/clientConfig.ini
-#            - /docker/flask/xkm/client_cert2_10.13.88.51.pfx:/root/xecure/xkm/XKM_Cert/client_cert2_10.13.88.51.pfx
-#            - /docker/flask/xkm/client_cert2_10.13.88.51.pfx:/root/xecure/xkm/XKM_Cert/client_cert2_10.13.88.51.pfx
-#            - /docker/fmsnas/images:/www/images
-#            - /docker/fmsnas/10.13.88.51/logs:/www/logs
-        expose:
-            - 5000
-#        networks:
-#            - backend
-    nginx:
-        image: nginx:0.0.1
-        build: ./nginx
-        container_name: nginx
-        restart: always
-        ports:
-            - "8080:8080"
-#        depends_on:
-#          - flask-api
-        expose:
-            - 8080
+#    flask:
+#        image: flask:serving
+#        build: ./flask
+#        container_name: flask
+#        restart: always
+#        ports:
+#            - "5000:5000"
+##        command:
+##            - /flask-api/wait-for-it.sh flask-api-mysql:3306 -- gunicorn -b 0.0.0.0:5000 -k gevent src.runner:app
+#
+#        environment:
+#            - APP_NAME=FlaskTest
+##            - FLASK_API_SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:toor@flask-api-mysql/flask-api-db
+##        depends_on:
+##            - flask-api-mysql
+##        volumes:
+##            - /docker/flask/config.prod.yaml:/www/src/config.yaml
+##            - /docker/flask/xkm/clientCOnfig_for_prod.ini:/root/xecure/xkm/conf/clientConfig.ini
+##            - /docker/flask/xkm/client_cert2_10.13.88.51.pfx:/root/xecure/xkm/XKM_Cert/client_cert2_10.13.88.51.pfx
+##            - /docker/flask/xkm/client_cert2_10.13.88.51.pfx:/root/xecure/xkm/XKM_Cert/client_cert2_10.13.88.51.pfx
+##            - /docker/fmsnas/images:/www/images
+##            - /docker/fmsnas/10.13.88.51/logs:/www/logs
+#        expose:
+#            - 5000
+##        networks:
+##            - backend
+#    nginx:
+#        image: nginx:0.0.1
+#        build: ./nginx
+#        container_name: nginx
+#        restart: always
+#        ports:
+#            - "8080:8080"
+##        depends_on:
+##          - flask-api
+#        expose:
+#            - 8080
 #        networks:
 #            - backend
 #        volumes:
