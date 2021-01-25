@@ -44,7 +44,7 @@ def serve_by_image(threshold, target_height, target_width, maxClsSize,target_fea
     print("elapsed time : ", time.time() - start)
     predictions = json.loads(json_response.text)['predictions']
     predictions = np.array(predictions)
-    print(predictions)
+    # print(predictions)
 
     result_dict, result_prob_dict,  segmentation_image = \
         show_results.single_image_visual_result(test_images[0], predictions,target_features, threshold)
@@ -83,6 +83,7 @@ def predict():
 
     result=dict()
     result['predict']=json.dumps(str(result_dict))
+    result['probability']=json.dumps(str(result_prob_dict))
 
     def myconverter(obj):
         if isinstance(obj, np.integer):

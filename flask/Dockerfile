@@ -13,11 +13,12 @@ RUN apt-get update -y \
 RUN apt-get update -y \
     && apt-get install ffmpeg libsm6 libxext6  -y
 
+RUN pip3 install -U pip
+RUN pip3 install -r requirements.txt
+
 COPY . /www/src/
 
 WORKDIR /www/src/
 
-RUN pip3 install -U pip
-RUN pip3 install -r requirements.txt
 #EXPOSE 5000
 CMD ["uwsgi","uwsgi.ini"]
