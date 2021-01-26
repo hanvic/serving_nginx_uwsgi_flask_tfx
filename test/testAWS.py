@@ -12,4 +12,4 @@ bb=buf.read()
 # print(bb2)
 
 data = {'data':base64.b64encode(bb)}
-json_response = requests.post('http://0.0.0.0:7014/predict',data=data)
+json_response = requests.post('http://115.71.48.60:8080/predict',data=data)

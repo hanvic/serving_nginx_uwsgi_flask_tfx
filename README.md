@@ -1,15 +1,11 @@
-curl -X POST 0.0.0.0:7016/predict -F 'file=@/home/data/_2737476_orig[1].jpg' -i
-
 # NGINX - uWsgi - Flask with Docker
 
 Nginx + uWsgi + Flask + TFX serving with docker-compose
 
 
 ## Project Structure
-
 ```bash
-flask-nginx-uwsgi-Docker
-├── docker-compose.yml
+├── docker-compose-uwsgi.yml
 ├── flask
 │   ├── Dockerfile
 │   ├── app.py
@@ -25,18 +21,16 @@ flask-nginx-uwsgi-Docker
 
 ## Set Up with..?
 
-- Docker를 사용해서 Flask와 uWsgi를 만들어주기
-- Nginx서버를 Docker로 만들어주기
-- docker-compose를 사용해서 생성된 Docker파일들을 하나로 묶어주기
+- 1) Dockerfile를 사용해서 Flask와 uWsgi 서버 올리기
+- 2) Dockerfile로 Nginx서버로 만들어주기
+- 3) docker-compose를 사용해서 생성된 Docker파일들을 하나로 묶어주기
 
-## set virtualenv
-
+## Docker로 Flask와 uWsgi 세팅하기
+tfx는 docker image로부터 model 위치와 환경 변수를 같이 넘겨주면 실행이 가능하기에 docker-compose내에 서비스 설정만으로 실행이 가능하다.  
+이후 실행되면 REST API만으로 test가 가능하다.
+만약 단일, 도커 tfx serving 서비스를 실행하고자 하면 다음의 command로 실행이 가능하다.
 ```bash
-$ pip3 install virtualenv
-$ virtualenv venv
-$ source venv/bin/activate
-(venv) $ pip install flask uwsgi
-(venv) $ pip install freeze > requirements.txt
+docker run --runtime=nvidia -p 3434:8501 --rm -v /home/serving/:/models/ --mount type=bind,source=/home/serving/eye,target=/models/eye -e MODEL_NAME=eye  -t tensorflow/serving:2.3.0-gpu --model_config_file_poll_wait_seconds=60 --model_config_file=/models/models.config --per_process_gpu_memory_fraction=0.15 --allow_growth=True
 ```
 
 ## Docker로 Flask와 uWsgi 세팅하기
@@ -74,14 +68,14 @@ if __name__ == '__main__':
 
 ```
 [uwsgi]
-wsgi-file = app.py
+wsgi-file = {working dir}/app.py
 callable = app
-socket = :8080
+socket = :5000
 processes = 4
 threads = 2
 master = true
 vacum = true
-chmod-socket = 660
+chmod-socket = 666
 die-on-term = true
 ```
 
@@ -107,6 +101,10 @@ Jinja2==2.11.2
 MarkupSafe==1.1.1
 uWSGI==2.0.19.1
 Werkzeug==1.0.1
+pillow
+numpy
+opencv-python
+requests
 ```
 
 ### templates/index.html
@@ -119,20 +117,34 @@ Werkzeug==1.0.1
 </html>
 <body>
     <h5>
-        this is index pages!
+        Welcome to flask server
     </h5>
 </body>
 ```
 
 ### Docker
 
-```docker
-FROM python:3
+```Dockerfile
+FROM ubuntu:18.04
 
-WORKDIR /app
+MAINTAINER Dongyul Lee "leedongyull@gmail.com"
 
-ADD . /app
-RUN pip install -r requirements.txt
+RUN apt-get update -y \
+    && apt-get install -y \
+    gunicorn \
+    python3 \
+    python3-dev \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -y \
+    && apt-get install ffmpeg libsm6 libxext6  -y
+
+RUN pip3 install -U pip
+
+COPY . /www/src/
+WORKDIR /www/src/
+RUN pip3 install -r requirements.txt
 
 CMD ["uwsgi","uwsgi.ini"]
 ```
@@ -151,55 +163,116 @@ nginx
 ### nginx.conf
 
 ```
-server {
+upstream up_uwsgi {
+    server 192.168.80.6:5000;
+}
 
-	listen 5000;
-	
+server {
+	listen 8080;
+    server_name 192.168.80.7;
+    charset     utf-8;
+
+    client_max_body_size 75M;   # adjust to taste
+
 	location / {
 		include uwsgi_params;
-		uwsgi_pass flask:8080;
+		uwsgi_pass up_uwsgi;
 	}
 }
 ```
 
 ### Dockerfile
 
-```docker
-FROM nginx
+```Dockerfile
+FROM nginx:1.17.4
 
 RUN rm /etc/nginx/conf.d/default.conf
 
-COPY nginx.conf /etc/nginx/conf.d/
+COPY default.conf /etc/nginx/conf.d/default.conf
 ```
 
 
-### docker-compose.yml
+### docker-compose-uwsgi.yml
 
 ```docker
-version: "3.7"
+version: "3.3"
 
-services: 
+services:
+    tfserving:
+        image: tensorflow/serving:2.3.0-gpu
+        container_name: tfs
+        volumes:
+            - /home/serving/:/models/
+            - type: bind
+              source: /home/serving/eye
+              target: /models/eye
+        ports:
+            - "8501:8501"
+        environment:
+            - NVIDIA_VISIBLE_DEVICES=0
+            - MODEL_NAME=eye
+        command:
+            - '--model_config_file_poll_wait_seconds=60'
+            - '--model_config_file=/models/models.config'
+            - '--per_process_gpu_memory_fraction=0.15'
+            - '--allow_growth=True'
+        expose:
+            - 8501
+        networks:
+            wire1:
+              ipv4_address: 192.168.80.5
+
     flask:
+        image: flask:serving
         build: ./flask
         container_name: flask
         restart: always
-        environment: 
+        ports:
+            - "5000:5000"
+        environment:
             - APP_NAME=FlaskTest
+#            - /docker/fmsnas/10.13.88.51/logs:/www/logs
         expose:
-            - 8080
+            - 5000
+        networks:
+            wire1:
+              ipv4_address: 192.168.80.6
 
     nginx:
+        image: nginx:0.0.1
         build: ./nginx
         container_name: nginx
         restart: always
+        depends_on:
+            - flask
         ports:
-            - "5000:5000
+            - "8080:8080"
+
+        expose:
+            - 8080
+        networks:
+            wire1:
+                ipv4_address: 192.168.80.7
+
+
+networks:
+  wire1:
+      driver: bridge
+      ipam:
+          config:
+              - subnet: 192.168.0.0/16
 ```
 
 ## Run docker-compose file
 
 ```bash
-$ docker-compose up -d --build
+$ docker-compose -f docker-compose-uwsgi.yml up -d --build
 ```
 
-완전 잘된다. 이제 덧붙일 개발을 시작해봐야겠습니다.
+
+## to do list
+
+- [x] uwsgi의 프로세스 thread 최적화
+- [x] tfx 서빙 서버의 최적화 - resolution size
+- [ ] tfx 서빙 서버 warm-up
+- [ ] docker compose에 log 폴더 volume시키기
