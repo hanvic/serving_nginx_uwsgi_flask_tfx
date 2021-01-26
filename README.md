@@ -19,8 +19,7 @@ Nginx + uWsgi + Flask + TFX serving with docker-compose
 └── venv
 ```
 
-## Set Up with..?
-
+## Set Up
 - 1) Dockerfile를 사용해서 Flask와 uWsgi 서버 올리기
 - 2) Dockerfile로 Nginx서버로 만들어주기
 - 3) docker-compose를 사용해서 생성된 Docker파일들을 하나로 묶어주기
