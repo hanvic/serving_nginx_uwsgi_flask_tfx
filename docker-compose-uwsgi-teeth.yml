@@ -35,7 +35,7 @@ services:
               source: /home/serving/tar
               target: /models/tar
         ports:
-            - "8503:8501"docke
+            - "8503:8501"
         environment:
             - NVIDIA_VISIBLE_DEVICES=0
             - MODEL_NAME=tar
