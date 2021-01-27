@@ -85,7 +85,7 @@ services:
         container_name: nginxteeth
         restart: always
         depends_on:
-            - flask
+            - flaskteeth
         ports:
             - "8081:8081"
         #        depends_on:
