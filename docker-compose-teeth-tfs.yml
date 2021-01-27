@@ -1,0 +1,58 @@
+version: "3.3"
+
+services:
+    tfsroot:
+        image: tensorflow/serving:2.3.0-gpu
+        container_name: tfsroot
+        volumes:
+            - /home/serving/:/models/
+            - type: bind
+              source: /home/serving/root
+              target: /models/root
+        ports:
+            - "8502:8501"
+        environment:
+            - NVIDIA_VISIBLE_DEVICES=0
+            - MODEL_NAME=root
+        command:
+            - '--model_config_file_poll_wait_seconds=60'
+            - '--model_config_file=/models/models.config'
+            - '--per_process_gpu_memory_fraction=0.15'
+            - '--allow_growth=True'
+        expose:
+            - 8502
+        networks:
+            wireteeth:
+              ipv4_address: 192.168.10.4
+
+
+    tfstar:
+        image: tensorflow/serving:2.3.0-gpu
+        container_name: tfstar
+        volumes:
+            - /home/serving/:/models/
+            - type: bind
+              source: /home/serving/tar
+              target: /models/tar
+        ports:
+            - "8503:8501"
+        environment:
+            - NVIDIA_VISIBLE_DEVICES=0
+            - MODEL_NAME=tar
+        command:
+            - '--model_config_file_poll_wait_seconds=60'
+            - '--model_config_file=/models/models.config'
+            - '--per_process_gpu_memory_fraction=0.15'
+            - '--allow_growth=True'
+        expose:
+            - 8503
+        networks:
+            wireteeth:
+              ipv4_address: 192.168.10.5
+
+networks:
+  wireteeth:
+      driver: bridge
+      ipam:
+          config:
+              - subnet: 192.168.10.0/24
