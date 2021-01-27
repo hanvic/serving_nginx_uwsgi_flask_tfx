@@ -47,7 +47,7 @@ def serve_by_image(threshold, target_height, target_width, root_maxClsSize,tar_m
     # root_json_response = requests.post('http://0.0.0.0:8502/v1/models/root:predict', data=data, headers=headers)
     # tar_json_response = requests.post('http://0.0.0.0:8503/v1/models/tar:predict', data=data, headers=headers)
     # json_response = requests.post('http://0.0.0.0:8501/v1/models/eye:predict', data=data, headers=headers)
-    print("elapsed time : ", time.time() - start)
+    print("elapsed time:q : ", time.time() - start)
     print("root_json_response.text",root_json_response.text)
     root_predictions = json.loads(root_json_response.text)['predictions']
     tar_predictions = json.loads(tar_json_response.text)['predictions']
