@@ -80,23 +80,23 @@ services:
         networks:
             wireteeth:
               ipv4_address: 192.168.10.6
-#
-#    nginxteeth:
-#        image: nginx:0.0.1
-#        build: ./nginxteeth
-#        container_name: nginxteeth
-#        restart: always
-#        depends_on:
-#            - flaskteeth
-#        ports:
-#            - "8081:8081"
-#        #        depends_on:
-#        #          - flask-api
-#        expose:
-#            - 8081
-#        networks:
-#            wireteeth:
-#                ipv4_address: 192.168.10.7
+
+    nginxteeth:
+        image: nginx:0.0.1
+        build: ./nginxteeth
+        container_name: nginxteeth
+        restart: always
+        depends_on:
+            - flaskteeth
+        ports:
+            - "8081:8081"
+        #        depends_on:
+        #          - flask-api
+        expose:
+            - 8081
+        networks:
+            wireteeth:
+                ipv4_address: 192.168.10.7
 
 
 networks:
