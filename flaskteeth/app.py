@@ -69,14 +69,15 @@ def predict():
 
 
     # a=request
-    if True:
+    if False:
         f = request.files['file']
         in_memory_file = io.BytesIO()
         f.save(in_memory_file)
         img = np.fromstring(in_memory_file.getvalue(), dtype=np.uint8)
         color_image_flag = 1
+        img = cv2.imdecode(img, color_image_flag)
     else:
-        # data=request.form['data']
+        data = request.form['data']
         imgdata = base64.b64decode(str(data))
         image = Image.open(io.BytesIO(imgdata))
         img = np.array(image)
@@ -93,7 +94,8 @@ def predict():
     tar_maxClsSize = 45
     root_target_features = [1,4,5,26,27,28,29,30,31,32,33]
     tar_target_features = [1,4,5,26,27,28,29,30,31,32,33]
-    resut_dict, result_prob_dict,  segmentation_image = \
+
+    result_dict, result_prob_dict,  segmentation_image = \
         serve_by_image(threshold, target_height, target_width, root_maxClsSize,tar_maxClsSize,root_target_features,tar_target_features,img)
 
     result=dict()
