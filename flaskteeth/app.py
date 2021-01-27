@@ -42,8 +42,8 @@ def serve_by_image(threshold, target_height, target_width, root_maxClsSize,tar_m
     # print('Data: {} ... {}'.format(data[:50], data[len(data) - 52:]))
     headers = {"content-type": "application/json"}
     start = time.time()
-    root_json_response = requests.post('http://192.168.10.4:8501/v1/models/root:predict', data=data, headers=headers)
-    tar_json_response = requests.post('http://192.168.10.5:8501/v1/models/tar:predict', data=data, headers=headers)
+    root_json_response = requests.post('http://192.168.10.4:8502/v1/models/root:predict', data=data, headers=headers)
+    tar_json_response = requests.post('http://192.168.10.5:8503/v1/models/tar:predict', data=data, headers=headers)
     # json_response = requests.post('http://0.0.0.0:8501/v1/models/eye:predict', data=data, headers=headers)
     print("elapsed time : ", time.time() - start)
     root_predictions = json.loads(root_json_response.text)['predictions']
