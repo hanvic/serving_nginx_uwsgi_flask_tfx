@@ -10,7 +10,7 @@ services:
               source: /home/serving/root
               target: /models/root
         ports:
-            - "8501:8501"
+            - "8502:8501"
         environment:
             - NVIDIA_VISIBLE_DEVICES=0
             - MODEL_NAME=root
@@ -35,7 +35,7 @@ services:
               source: /home/serving/tar
               target: /models/tar
         ports:
-            - "8501:8501"
+            - "8503:8501"
         environment:
             - NVIDIA_VISIBLE_DEVICES=0
             - MODEL_NAME=tar
