@@ -62,7 +62,7 @@ services:
 #            - /flask-api/wait-for-it.sh flask-api-mysql:3306 -- gunicorn -b 0.0.0.0:5000 -k gevent src.runner:app
 
         environment:
-            - APP_NAME=FlaskTest
+            - APP_NAME=FlaskTest2
 #            - FLASK_API_SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:toor@flask-api-mysql/flask-api-db
 #        depends_on:
 #            - tfserving
