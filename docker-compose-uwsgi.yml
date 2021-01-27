@@ -17,8 +17,9 @@ services:
         command:
             - '--model_config_file_poll_wait_seconds=60'
             - '--model_config_file=/models/models.config'
-            - '--per_process_gpu_memory_fraction=0.15'
-            - '--allow_growth=True'
+            - '--per_process_gpu_memory_fraction=0.20'
+            - '--rest_api_port=8501'
+            - '--enable_model_warmup=true'
         expose:
             - 8501
         networks:
