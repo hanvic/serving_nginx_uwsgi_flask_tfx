@@ -82,7 +82,7 @@ services:
               ipv4_address: 192.168.10.6
 
     nginxteeth:
-        image: nginx:0.0.1
+        image: nginxteeth:0.0.1
         build: ./nginxteeth
         container_name: nginxteeth
         restart: always
