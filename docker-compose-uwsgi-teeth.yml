@@ -53,7 +53,7 @@ services:
               ipv4_address: 192.168.10.5
 
     flaskteeth:
-        image: flask:serving
+        image: flaskteeth:serving
         build: ./flaskteeth
         container_name: flaskteeth
         restart: always
