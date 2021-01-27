@@ -1,0 +1,14 @@
+# dev local docker
+
+base_dir: '/www'
+base_image_dir: 'images'
+
+db_user: 'root'
+db_pwd: 'kakaobank'
+db_addr: '172.19.112.78:3306'
+db_uri: 'mysql://root:kakaobank@172.19.112.78:3306/'
+db_name: 'BLACKMIRROR_DEVELOPMENT'
+db_face_expire_days: 1
+
+login_url: 'https://ima-dev.kabang.io:9443/api/common/authentication'
+login_token: ''
