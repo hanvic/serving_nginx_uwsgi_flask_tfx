@@ -263,9 +263,10 @@ networks:
 ```
 
 ## Run docker-compose file
-
+두 개 이상의 도커 컴포즈를 배포하고싶으면 터미널창을 두 개 띄운후 하기 명령어를 실행 시키면 된다.
 ```bash
-$ docker-compose -f docker-compose-uwsgi.yml up -d --build
+$ docker-compose -f docker-compose-uwsgi.yml up --build
+$ docker-compose -f docker-compose-uwsgi-teeth.yml up --build
 ```
 
 ## test
