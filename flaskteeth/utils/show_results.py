@@ -149,7 +149,7 @@ def single_image_visual_result(image,  teeth_prediction, prediction, root_target
             c_i += 1
 
             NofPixels = masks_color.shape[0] * masks_color.shape[1]
-            if tar_NofValidPixels / NofValidPixels < 0.9:
+            if tar_NofValidPixels / NofPixels < 0.9:
                 if tar_NofValidPixels / NofPixels > 0.001:
                     result_dict['tar'] = 1
                     result_prob_dict['tar'] = maxtarRatio
