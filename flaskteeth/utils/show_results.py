@@ -56,18 +56,21 @@ def single_image_visual_result(image,  teeth_prediction, prediction, root_target
     no2name_dict['2'] = 'tooth_root'
     no2name_dict['3'] = 'gingiva_dehiscence'
     no2name_dict['4'] = 'normal'
+    no2name_dict['5'] = 'tar'
 
     result_dict = dict()
     result_dict['dental_calculus'] = 0
     result_dict['tooth_root'] = 0
     result_dict['gingiva_dehiscence'] = 0
     result_dict['normal'] = 0
+    result_dict['tar'] = 0
 
     result_prob_dict = dict()
     result_prob_dict['dental_calculus'] = 0
     result_prob_dict['tooth_root'] = 0
     result_prob_dict['gingiva_dehiscence'] = 0
     result_prob_dict['normal'] = 0
+    result_prob_dict['tar'] = 0
 
     temp_valid_label_dict = dict()
 
@@ -83,7 +86,9 @@ def single_image_visual_result(image,  teeth_prediction, prediction, root_target
         if k in target_features:
             NofValidPixels = 0
             teeth_NofValidPixels = 0
+            tar_NofValidPixels = 0
             maxRatio = 0
+            maxtarRatio = 0
         # if np.max(label[...,k])> 0 and k> 0:
             # print("no",no, np.max(label[...,k]), len(np.where(label[...,k]>0)[0]))
             print("no", np.max(prediction[..., k]))
@@ -93,8 +98,9 @@ def single_image_visual_result(image,  teeth_prediction, prediction, root_target
                         numpy_prediction[i, j, k] = 1
                         # numpy_target_prediction[i, j, k] = 1
                         NofValidPixels += 1
-                        if maxRatio < prediction[i, j, k]:
-                            maxRatio = prediction[i, j, k]
+                        tar_NofValidPixels+=1
+                        if maxtarRatio < prediction[i, j, k]:
+                            maxtarRatio = prediction[i, j, k]
                     else:
                         numpy_prediction[i, j, k] = 0
                         # numpy_target_prediction[i, j, k] = 0
@@ -141,6 +147,13 @@ def single_image_visual_result(image,  teeth_prediction, prediction, root_target
                     #     teeth_masks_color[i, j] = np.array(colormap[0])
 
             c_i += 1
+
+            NofPixels = masks_color.shape[0] * masks_color.shape[1]
+            if tar_NofValidPixels / NofValidPixels < 0.9:
+                if tar_NofValidPixels / NofPixels > 0.001:
+                    result_dict['tar'] = 1
+                    result_prob_dict['tar'] = maxtarRatio
+
             if k == 1 or k == 2:
                 masks_color = teeth_masks_color
                 masks_color = masks_color.astype(np.uint8)
@@ -150,7 +163,8 @@ def single_image_visual_result(image,  teeth_prediction, prediction, root_target
                 cls = set(cls)
                 # /
                 NofPixels = masks_color.shape[0] * masks_color.shape[1]
-                NofValidPixels = teeth_NofValidPixels
+
+                # NofValidPixels = tar_NofValidPixels
 
                 print("ratio valid pixels : ", NofValidPixels / NofPixels)
                 if NofValidPixels / NofPixels < 0.9:
